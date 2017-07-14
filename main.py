@@ -1,7 +1,9 @@
 '''
+下記の例題から数値は拝借
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0042
 '''
 import sys
+import numpy as np
 
 class Item:
     def __init__(self, p=0, c=0):
@@ -12,7 +14,14 @@ class Item:
         self.c = c
 
 def dp(C, items):
-    return 0, 0
+    m = np.zeros((len(items), C + 1))
+    for i in range(1, len(items)):
+        for j in range(C + 1):
+            if items[i].c < j:
+                m[i][j] = max(m[i-1][j], m[i-1][j-items[i].c]+items[i].p)
+            else:
+                m[i][j] = m[i-1][j]
+    return m[-1][-1]
 
 def main(argv):
     C = 50
@@ -24,7 +33,8 @@ def main(argv):
         Item(10, 4),
     ]
 
-    c, p = dp(C, items)
+    print(dp(C, items))
+
     return
 
 if __name__ == '__main__':
